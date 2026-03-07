@@ -63,7 +63,7 @@ Model: **openvpn**
 4. Select **Custom repositories**
 5. Add:
 
-https://github.com/kramttocs/ha_gluetun
+https://github.com/kramttocs/ha-gluetun
 
 Repository type: **Integration**
 
