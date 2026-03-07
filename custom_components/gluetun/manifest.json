@@ -1,0 +1,12 @@
+{
+  "domain": "gluetun",
+  "name": "Gluetun",
+  "codeowners": [
+    "@kramttocs"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/kramttocs/gluetun",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/kramttocs/gluetun/issues",
+  "version": "2026.3.7"
+}
