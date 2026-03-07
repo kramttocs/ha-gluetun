@@ -3,7 +3,7 @@
 
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 
-This is a **Home Assistant custom integration** the retrieves data from, and minimally controls a Gluetun instance
+This is a **Home Assistant custom integration** that retrieves data from, and minimally controls a Gluetun instance
 
 The integration polls the Gluetun API every **60 seconds**, while the **public IP and settings refresh every 5 minutes**.
 
@@ -97,7 +97,7 @@ config/
 
 # Requirements
 
-A running **Gluetun container** with the **HTTP Control Server enabled** and accessible from Home Assistant.
+A Gluetan instance with the **HTTP Control Server enabled**
 
 Example control server address:
 
