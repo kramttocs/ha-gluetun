@@ -16,7 +16,6 @@ from .const import (
     CONF_SSL,
     CONF_USERNAME,
     CONF_VERIFY_SSL,
-    DEFAULT_PORT,
     DOMAIN,
     PLATFORMS,
 )

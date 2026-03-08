@@ -27,11 +27,17 @@
   },
   "entity": {
     "sensor": {
-      "status": {
-        "name": "Status"
+      "vpn_status": {
+        "name": "VPN Status"
       },
       "public_ip": {
         "name": "Public IP"
+      },
+      "provider": {
+        "name": "Provider"
+      },
+      "vpn_type": {
+        "name": "VPN Type"
       },
       "region": {
         "name": "Region"
