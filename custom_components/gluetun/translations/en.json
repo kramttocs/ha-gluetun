@@ -8,19 +8,37 @@
           "port": "Port",
           "ssl": "Use SSL",
           "verify_ssl": "Verify SSL certificate",
+          "auth_type": "Authentication method"
+        }
+      },
+      "basic_auth": {
+        "title": "Basic authentication",
+        "data": {
           "username": "Username",
           "password": "Password"
+        }
+      },
+      "api_key_auth": {
+        "title": "API Key authentication",
+        "data": {
+          "api_key": "API Key"
         }
       }
     }
   },
   "options": {
     "step": {
-      "init": {
+      "basic_auth": {
         "title": "Update Gluetun credentials",
         "data": {
           "username": "Username",
           "password": "Password"
+        }
+      },
+      "api_key_auth": {
+        "title": "Update Gluetun API key",
+        "data": {
+          "api_key": "API Key"
         }
       }
     }
@@ -59,6 +77,14 @@
       },
       "timezone": {
         "name": "Timezone"
+      }
+    },
+    "button": {
+      "start_vpn": {
+        "name": "Start VPN"
+      },
+      "stop_vpn": {
+        "name": "Stop VPN"
       }
     }
   }
