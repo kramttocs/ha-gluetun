@@ -1,7 +1,13 @@
 
 # Gluetun – Home Assistant Custom Integration
 
+# Gluetun – Home Assistant Custom Integration
+
+[![License](https://img.shields.io/github/license/kramttocs/ha-gluetun.svg)](LICENSE)
 [![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![Validate](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml/badge.svg)](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml)
+[![GitHub Release](https://img.shields.io/github/release/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/releases)
+[![GitHub Activity](https://img.shields.io/github/commit-activity/m/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/commits/main)
 
 This is a **Home Assistant custom integration** that retrieves data from, and minimally controls a Gluetun instance
 
