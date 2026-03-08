@@ -29,14 +29,14 @@ BUTTONS: Final[tuple[GluetunButtonEntityDescription, ...]] = (
     GluetunButtonEntityDescription(
         key="start_vpn",
         name="Start VPN",
-        icon="mdi:play",
+        icon="mdi:play-circle",
         press_status="running",
         available_fn=lambda coordinator: coordinator.vpn_status != "running",
     ),
     GluetunButtonEntityDescription(
         key="stop_vpn",
         name="Stop VPN",
-        icon="mdi:stop",
+        icon="mdi:stop-circle",
         press_status="stopped",
         available_fn=lambda coordinator: coordinator.vpn_status != "stopped",
     ),
@@ -84,7 +84,7 @@ class GluetunButton(CoordinatorEntity[GluetunDataUpdateCoordinator], ButtonEntit
     def device_info(self) -> DeviceInfo:
         """Return device info."""
         return DeviceInfo(
-            identifiers={(DOMAIN, self.coordinator.config_entry.entry_id)},
+            identifiers={(DOMAIN, self._entry_id)},
             name=DEFAULT_NAME,
             manufacturer=self.coordinator.provider_name or MANUFACTURER,
             model=self.coordinator.vpn_type or MODEL,
