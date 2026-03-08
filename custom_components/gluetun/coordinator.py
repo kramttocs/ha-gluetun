@@ -83,7 +83,7 @@ class GluetunDataUpdateCoordinator(
         except ClientError as err:
             raise UpdateFailed(f"Error setting VPN status: {err}") from err
 
-        await self.async_request_refresh()
+        await self.async_refresh_all_data()
 
     async def _async_update_data(self) -> dict[str, dict[str, Any]]:
         """Fetch and validate data from the configured endpoints."""
@@ -129,3 +129,9 @@ class GluetunDataUpdateCoordinator(
             COORDINATOR_PUBLIC_IP: self._last_public_ip_data,
             COORDINATOR_SETTINGS: self._last_settings_data,
         }
+        
+    async def async_refresh_all_data(self) -> None:
+        """Force refresh of all coordinator data, including slow-changing data."""
+        self._last_public_ip_data = {}
+        self._last_settings_data = {}
+        await self.async_request_refresh()
