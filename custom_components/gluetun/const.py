@@ -14,6 +14,12 @@ CONF_SSL = "ssl"
 CONF_VERIFY_SSL = "verify_ssl"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
+CONF_AUTH_TYPE = "auth_type"
+CONF_API_KEY = "api_key"
+
+AUTH_BASIC = "basic"
+AUTH_API_KEY = "api_key"
+AUTH_NONE = "none"
 
 DEFAULT_PORT = 8000
 

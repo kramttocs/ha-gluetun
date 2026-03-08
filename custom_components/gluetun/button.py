@@ -28,14 +28,14 @@ class GluetunButtonEntityDescription(ButtonEntityDescription):
 BUTTONS: Final[tuple[GluetunButtonEntityDescription, ...]] = (
     GluetunButtonEntityDescription(
         key="start_vpn",
-        name="Start VPN",
+        translation_key="start_vpn",
         icon="mdi:play-circle",
         press_status="running",
         available_fn=lambda coordinator: coordinator.vpn_status != "running",
     ),
     GluetunButtonEntityDescription(
         key="stop_vpn",
-        name="Stop VPN",
+        translation_key="stop_vpn",
         icon="mdi:stop-circle",
         press_status="stopped",
         available_fn=lambda coordinator: coordinator.vpn_status != "stopped",

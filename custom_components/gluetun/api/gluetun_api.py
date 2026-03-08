@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 
 import aiohttp
 from aiohttp import ClientResponseError, ClientSession
+from ..const import AUTH_BASIC, AUTH_NONE, AUTH_API_KEY
 
 
 class GluetunAuthenticationError(Exception):
@@ -24,8 +25,10 @@ class GluetunApi:
         port: int,
         ssl: bool,
         verify_ssl: bool,
-        username: str,
-        password: str,
+        auth_type: str,
+        username: str = "",
+        password: str = "",
+        api_key: str = "",
     ) -> None:
         """Initialize the API client."""
         self._session = session
@@ -38,7 +41,16 @@ class GluetunApi:
         self._port = port
         self._ssl = ssl
         self._verify_ssl = verify_ssl
-        self._auth = aiohttp.BasicAuth(username, password)
+        self._auth_type = auth_type
+        self._auth = None
+        self._headers: dict[str, str] = {}
+
+        if auth_type == AUTH_BASIC:
+            self._auth = aiohttp.BasicAuth(username, password)
+        elif auth_type == AUTH_API_KEY:
+            self._headers["X-API-Key"] = api_key
+        elif auth_type == AUTH_NONE:
+            pass
 
     @property
     def _api_url(self) -> str:
@@ -54,13 +66,18 @@ class GluetunApi:
             async with self._session.get(
                 url,
                 auth=self._auth,
+                headers=self._headers,
                 ssl=self._verify_ssl,
             ) as response:
                 response.raise_for_status()
                 data = await response.json(content_type=None)
         except ClientResponseError as err:
             if err.status == 401:
-                raise GluetunAuthenticationError("Invalid username or password") from err
+                if self._auth_type == AUTH_API_KEY:
+                    raise GluetunAuthenticationError("Invalid API key") from err
+                if self._auth_type == AUTH_BASIC:
+                    raise GluetunAuthenticationError("Invalid username or password") from err
+                raise GluetunAuthenticationError("Authentication failed") from err
             raise
 
         if not isinstance(data, dict):
@@ -90,10 +107,15 @@ class GluetunApi:
                 url,
                 json=payload,
                 auth=self._auth,
+                headers=self._headers,
                 ssl=self._verify_ssl,
             ) as response:
                 response.raise_for_status()
         except ClientResponseError as err:
             if err.status == 401:
-                raise GluetunAuthenticationError("Invalid username or password") from err
+                if self._auth_type == AUTH_API_KEY:
+                    raise GluetunAuthenticationError("Invalid API key") from err
+                if self._auth_type == AUTH_BASIC:
+                    raise GluetunAuthenticationError("Invalid username or password") from err
+                raise GluetunAuthenticationError("Authentication failed") from err
             raise
