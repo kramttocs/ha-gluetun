@@ -45,47 +45,28 @@
   },
   "entity": {
     "sensor": {
-      "vpn_status": {
-        "name": "VPN Status"
-      },
-      "public_ip": {
-        "name": "Public IP"
-      },
-      "provider": {
-        "name": "Provider"
-      },
-      "vpn_type": {
-        "name": "VPN Type"
-      },
-      "region": {
-        "name": "Region"
-      },
-      "country": {
-        "name": "Country"
-      },
-      "city": {
-        "name": "City"
-      },
-      "location": {
-        "name": "Location"
-      },
-      "organization": {
-        "name": "Organization"
-      },
-      "postal_code": {
-        "name": "Postal code"
-      },
-      "timezone": {
-        "name": "Timezone"
-      }
+      "vpn_status": {"name": "VPN Status"},
+      "public_ip": {"name": "Public IP"},
+      "provider": {"name": "Provider"},
+      "vpn_type": {"name": "VPN Type"},
+      "region": {"name": "Region"},
+      "country": {"name": "Country"},
+      "city": {"name": "City"},
+      "location": {"name": "Location"},
+      "organization": {"name": "Organization"},
+      "postal_code": {"name": "Postal code"},
+      "timezone": {"name": "Timezone"},
+      "latitude": {"name": "Latitude"},
+      "longitude": {"name": "Longitude"},
+      "last_ip_change": {"name": "Last IP Change"}
+    },
+    "binary_sensor": {
+      "vpn_connected": {"name": "VPN Connected"}
     },
     "button": {
-      "start_vpn": {
-        "name": "Start VPN"
-      },
-      "stop_vpn": {
-        "name": "Stop VPN"
-      }
+      "start_vpn": {"name": "Start VPN"},
+      "stop_vpn": {"name": "Stop VPN"},
+      "restart_vpn": {"name": "Restart VPN"}
     }
   }
 }

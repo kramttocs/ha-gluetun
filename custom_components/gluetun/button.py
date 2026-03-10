@@ -2,27 +2,30 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
-from typing import Final
+from typing import Any, Final
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, MANUFACTURER, MODEL, DEFAULT_NAME
+from .const import DEFAULT_NAME, DOMAIN, MANUFACTURER, MODEL
 from .coordinator import GluetunDataUpdateCoordinator
+
+GluetunPressFn = Callable[[GluetunDataUpdateCoordinator], Coroutine[Any, Any, None]]
+GluetunAvailableFn = Callable[[GluetunDataUpdateCoordinator], bool]
 
 
 @dataclass(frozen=True, kw_only=True)
 class GluetunButtonEntityDescription(ButtonEntityDescription):
     """Describe a Gluetun button entity."""
 
-    press_status: str
-    available_fn: Callable[[GluetunDataUpdateCoordinator], bool]
+    press_fn: GluetunPressFn
+    available_fn: GluetunAvailableFn
 
 
 BUTTONS: Final[tuple[GluetunButtonEntityDescription, ...]] = (
@@ -30,15 +33,22 @@ BUTTONS: Final[tuple[GluetunButtonEntityDescription, ...]] = (
         key="start_vpn",
         translation_key="start_vpn",
         icon="mdi:play-circle",
-        press_status="running",
+        press_fn=lambda coordinator: coordinator.set_vpn_status("running"),
         available_fn=lambda coordinator: coordinator.vpn_status != "running",
     ),
     GluetunButtonEntityDescription(
         key="stop_vpn",
         translation_key="stop_vpn",
         icon="mdi:stop-circle",
-        press_status="stopped",
+        press_fn=lambda coordinator: coordinator.set_vpn_status("stopped"),
         available_fn=lambda coordinator: coordinator.vpn_status != "stopped",
+    ),
+    GluetunButtonEntityDescription(
+        key="restart_vpn",
+        translation_key="restart_vpn",
+        icon="mdi:restart",
+        press_fn=lambda coordinator: coordinator.async_restart_vpn(),
+        available_fn=lambda coordinator: coordinator.vpn_status is not None,
     ),
 )
 
@@ -46,15 +56,12 @@ BUTTONS: Final[tuple[GluetunButtonEntityDescription, ...]] = (
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up Gluetun button entities."""
     coordinator: GluetunDataUpdateCoordinator = hass.data[DOMAIN][entry.entry_id]
 
-    async_add_entities(
-        GluetunButton(coordinator, entry.entry_id, description)
-        for description in BUTTONS
-    )
+    async_add_entities(GluetunButton(coordinator, entry.entry_id, description) for description in BUTTONS)
 
 
 class GluetunButton(CoordinatorEntity[GluetunDataUpdateCoordinator], ButtonEntity):
@@ -92,4 +99,4 @@ class GluetunButton(CoordinatorEntity[GluetunDataUpdateCoordinator], ButtonEntit
 
     async def async_press(self) -> None:
         """Handle the button press."""
-        await self.coordinator.set_vpn_status(self.entity_description.press_status)
+        await self.entity_description.press_fn(self.coordinator)
