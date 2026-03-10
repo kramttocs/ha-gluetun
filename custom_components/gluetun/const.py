@@ -6,7 +6,7 @@ DOMAIN = "gluetun"
 
 DEFAULT_NAME = "Gluetun"
 
-PLATFORMS: list[str] = ["sensor", "button"]
+PLATFORMS: list[str] = ["sensor", "button", "binary_sensor"]
 
 CONF_HOST = "host"
 CONF_PORT = "port"
@@ -29,6 +29,8 @@ COORDINATOR_SETTINGS = "settings"
 
 STATUS_SCAN_INTERVAL_SECONDS = 60
 SCAN_INTERVAL_SECONDS = 300
+
+EVENT_IP_CHANGED = f"{DOMAIN}_ip_changed"
 
 MANUFACTURER = "Gluetun"
 MODEL = "VPN"

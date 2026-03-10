@@ -4,9 +4,10 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Final, Any
+from datetime import datetime
+from typing import Any, Final
 
-from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
@@ -25,9 +26,9 @@ from .const import (
 )
 from .coordinator import GluetunDataUpdateCoordinator
 
-
-type GluetunConfigEntry = ConfigEntry[dict[str, Any]]
-type GluetunValueFn = Callable[[GluetunDataUpdateCoordinator], str | None]
+GluetunConfigEntry = ConfigEntry[dict[str, Any]]
+GluetunValueFn = Callable[[GluetunDataUpdateCoordinator], str | float | datetime | None]
+GluetunAttrFn = Callable[[GluetunDataUpdateCoordinator], dict[str, Any] | None]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -35,87 +36,62 @@ class GluetunSensorEntityDescription(SensorEntityDescription):
     """Describe a Gluetun sensor entity."""
 
     value_fn: GluetunValueFn
+    extra_attributes_fn: GluetunAttrFn | None = None
 
 
 def _provider_name(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the VPN provider name."""
     settings = coordinator.data.get(COORDINATOR_SETTINGS, {})
     provider = settings.get("provider", {})
     if not isinstance(provider, dict):
         return None
-
     name = provider.get("name")
     return name if isinstance(name, str) and name else None
 
 
 def _vpn_type(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the VPN type."""
     settings = coordinator.data.get(COORDINATOR_SETTINGS, {})
     value = settings.get("type")
     return value if isinstance(value, str) and value else None
 
 
 def _vpn_status(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the VPN status."""
     status = coordinator.data.get(COORDINATOR_STATUS, {})
     value = status.get("status")
     return value if isinstance(value, str) and value else None
 
 
 def _public_ip(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the public IP."""
     public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
     value = public_ip.get("public_ip")
     return value if isinstance(value, str) and value else None
-    
 
-def _location(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the location."""
+
+def _string_public_ip_field(coordinator: GluetunDataUpdateCoordinator, key: str) -> str | None:
     public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("location")
+    value = public_ip.get(key)
     return value if isinstance(value, str) and value else None
 
 
-def _organization(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the organization."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("organization")
-    return value if isinstance(value, str) and value else None
+def _latitude(coordinator: GluetunDataUpdateCoordinator) -> float | None:
+    return coordinator.latitude
 
 
-def _postal_code(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the postal code."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("postal_code")
-    return value if isinstance(value, str) and value else None
+def _longitude(coordinator: GluetunDataUpdateCoordinator) -> float | None:
+    return coordinator.longitude
 
 
-def _country(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the country."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("country")
-    return value if isinstance(value, str) and value else None
+def _last_ip_change(coordinator: GluetunDataUpdateCoordinator) -> datetime | None:
+    return coordinator.last_ip_change_at
 
 
-def _region(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the region."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("region")
-    return value if isinstance(value, str) and value else None
-
-
-def _city(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the city."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("city")
-    return value if isinstance(value, str) and value else None
-
-
-def _timezone(coordinator: GluetunDataUpdateCoordinator) -> str | None:
-    """Return the timezone."""
-    public_ip = coordinator.data.get(COORDINATOR_PUBLIC_IP, {})
-    value = public_ip.get("timezone")
-    return value if isinstance(value, str) and value else None
+def _last_ip_change_attrs(coordinator: GluetunDataUpdateCoordinator) -> dict[str, Any] | None:
+    if coordinator.last_ip_change_at is None:
+        return None
+    return {
+        "old_ip": coordinator.previous_public_ip,
+        "new_ip": coordinator.current_public_ip,
+        "changed_at": coordinator.last_ip_change_at.isoformat(),
+    }
 
 
 SENSOR_DESCRIPTIONS: Final[tuple[GluetunSensorEntityDescription, ...]] = (
@@ -149,49 +125,72 @@ SENSOR_DESCRIPTIONS: Final[tuple[GluetunSensorEntityDescription, ...]] = (
         translation_key="location",
         icon="mdi:crosshairs-gps",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_location,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "location"),
     ),
     GluetunSensorEntityDescription(
         key="organization",
         translation_key="organization",
         icon="mdi:domain",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_organization,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "organization"),
     ),
     GluetunSensorEntityDescription(
         key="postal_code",
         translation_key="postal_code",
         icon="mdi:mailbox",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_postal_code,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "postal_code"),
     ),
     GluetunSensorEntityDescription(
         key="country",
         translation_key="country",
         icon="mdi:earth",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_country,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "country"),
     ),
     GluetunSensorEntityDescription(
         key="region",
         translation_key="region",
         icon="mdi:map-marker-radius",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_region,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "region"),
     ),
     GluetunSensorEntityDescription(
         key="city",
         translation_key="city",
         icon="mdi:city",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_city,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "city"),
     ),
     GluetunSensorEntityDescription(
         key="timezone",
         translation_key="timezone",
         icon="mdi:clock-outline",
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=_timezone,
+        value_fn=lambda coordinator: _string_public_ip_field(coordinator, "timezone"),
+    ),
+    GluetunSensorEntityDescription(
+        key="latitude",
+        translation_key="latitude",
+        icon="mdi:latitude",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=_latitude,
+    ),
+    GluetunSensorEntityDescription(
+        key="longitude",
+        translation_key="longitude",
+        icon="mdi:longitude",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=_longitude,
+    ),
+    GluetunSensorEntityDescription(
+        key="last_ip_change",
+        translation_key="last_ip_change",
+        icon="mdi:history",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=_last_ip_change,
+        extra_attributes_fn=_last_ip_change_attrs,
     ),
 )
 
@@ -210,10 +209,7 @@ async def async_setup_entry(
     )
 
 
-class GluetunSensorEntity(
-    CoordinatorEntity[GluetunDataUpdateCoordinator],
-    SensorEntity,
-):
+class GluetunSensorEntity(CoordinatorEntity[GluetunDataUpdateCoordinator], SensorEntity):
     """Representation of a Gluetun sensor."""
 
     entity_description: GluetunSensorEntityDescription
@@ -232,9 +228,16 @@ class GluetunSensorEntity(
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
 
     @property
-    def native_value(self) -> str | None:
+    def native_value(self) -> str | float | datetime | None:
         """Return the sensor state."""
         return self.entity_description.value_fn(self.coordinator)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        """Return extra state attributes."""
+        if self.entity_description.extra_attributes_fn is None:
+            return None
+        return self.entity_description.extra_attributes_fn(self.coordinator)
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -248,7 +251,7 @@ class GluetunSensorEntity(
             manufacturer=manufacturer,
             model=model,
         )
-        
+
     @property
     def icon(self) -> str | None:
         """Return the entity icon."""
