@@ -11,6 +11,8 @@ This is a **Home Assistant custom integration** that retrieves data from, and mi
 
 The integration polls the Gluetun API every **60 seconds**, while the **public IP and settings refresh every 5 minutes**.
 
+This is/was designed, reviewed, and tested by me. AI assisted in generating documentation and some logic/design patterns.
+
 ---
 
 # Acknowledgments
