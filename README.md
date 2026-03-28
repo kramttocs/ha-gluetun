@@ -61,7 +61,7 @@ Model: **openvpn**
 
 # Installation
 
-## HACS (Recommended)
+## HACS
 
 1. Open **HACS**
 2. Navigate to **Integrations**
@@ -80,27 +80,6 @@ Repository type: **Integration**
 
 ---
 
-## Manual Installation
-
-1. Download or clone this repository.
-2. Copy:
-
-`custom_components/gluetun`
-
-into your Home Assistant configuration directory:
-
-`config/custom_components/`
-
-Example:
-
-config/
-└── custom_components/
-    └── gluetun/
-
-3. Restart Home Assistant.
-
----
-
 # Requirements
 
 A Gluetan instance with the **HTTP Control Server enabled**
@@ -109,10 +88,6 @@ Example control server address:
 
 `http://<gluetun-host>:8000`
 
-Authentication must also be enabled because the integration uses **HTTP Basic Authentication**. 
-
-Other Gluetun authentication types will be added shortly.
-
 ---
 
 # Configuration (Home Assistant)
@@ -120,20 +95,8 @@ Other Gluetun authentication types will be added shortly.
 1. Go to **Settings → Devices & Services**
 2. Click **Add Integration**
 3. Search for **Gluetun**
-4. Enter:
-
-| Field | Description |
-|------|------|
-| Host | IP or hostname of your Gluetun instance |
-| Port | Control server port (default 8000) |
-| SSL | Enable if using HTTPS |
-| Verify SSL | Disable for self-signed certificates |
-| Username | Control server username |
-| Password | Control server password |
-
+4. Enter your values
 5. Finish the setup.
-
-Entities will automatically be created.
 
 ---
 
