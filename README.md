@@ -89,26 +89,3 @@ Example control server address:
 `http://<gluetun-host>:8000`
 
 ---
-
-# Configuration (Home Assistant)
-
-1. Go to **Settings → Devices & Services**
-2. Click **Add Integration**
-3. Search for **Gluetun**
-4. Enter your values
-5. Finish the setup.
-
----
-
-# Entities Created
-
-### Sensors
-
-sensor.gluetun_vpn_status  
-sensor.gluetun_public_ip
-
-### Buttons
-
-button.gluetun_start_vpn  
-button.gluetun_stop_vpn
-
