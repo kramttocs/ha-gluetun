@@ -20,7 +20,7 @@ This is/was designed, reviewed, and tested by me. AI assisted in generating docu
 
 https://github.com/qdm12/gluetun
 
-**madcowGIT** for the concept of this integration
+**madcowGIT** for the concept of this integration (and the 'ok' to promote mine)
 
 https://github.com/madcowGit/gluetun_cc
 
