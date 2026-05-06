@@ -2,7 +2,6 @@
 # Gluetun – Home Assistant Custom Integration
 
 [![License](https://img.shields.io/github/license/kramttocs/ha-gluetun.svg)](LICENSE)
-[![HACS](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 [![Validate](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml/badge.svg)](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml)
 [![GitHub Release](https://img.shields.io/github/release/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/commits/main)
@@ -21,7 +20,7 @@ This is/was designed, reviewed, and tested by me. AI assisted in generating docu
 
 https://github.com/qdm12/gluetun
 
-**madcowGIT** for the concept of this integraton
+**madcowGIT** for the concept of this integration
 
 https://github.com/madcowGit/gluetun_cc
 
@@ -62,6 +61,8 @@ Model: **openvpn**
 # Installation
 
 ## HACS
+
+I've submitted it to be added but for now it's a custom repo
 
 1. Open **HACS**
 2. Navigate to **Integrations**
