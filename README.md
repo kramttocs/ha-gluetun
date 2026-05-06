@@ -6,9 +6,9 @@
 [![GitHub Release](https://img.shields.io/github/release/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/commits/main)
 
-This is a **Home Assistant custom integration** that retrieves data from, and minimally controls a Gluetun instance
+A Home Assistant custom integration that retrieves data from, and minimally controls a Gluetun instance
 
-The integration polls the Gluetun API every **60 seconds**, while the **public IP and settings refresh every 5 minutes**.
+The integration polls the Gluetun API every 60 seconds, while the public IP and settings refresh every 5 minutes.
 
 This is/was designed, reviewed, and tested by me. AI assisted in generating documentation and some logic/design patterns.
 
