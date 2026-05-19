@@ -62,24 +62,7 @@ Model: **openvpn**
 
 ## HACS
 
-I've submitted it to be added but for now it's a custom repo
-
-1. Open **HACS**
-2. Navigate to **Integrations**
-3. Click the **⋯ (three dots)** menu
-4. Select **Custom repositories**
-5. Add:
-
-https://github.com/kramttocs/ha-gluetun
-
-Repository type: **Integration**
-
-6. Click **Add**
-7. Search for **Gluetun**
-8. Click **Install**
-9. Restart Home Assistant
-
----
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=kramttocs&repository=ha-gluetun&category=integration)
 
 # Requirements
 
