@@ -1,7 +1,6 @@
 
 # Gluetun – Home Assistant Custom Integration
 
-[![License](https://img.shields.io/github/license/kramttocs/ha-gluetun.svg)](LICENSE)
 [![Validate](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml/badge.svg)](https://github.com/kramttocs/ha-gluetun/actions/workflows/validate.yaml)
 [![GitHub Release](https://img.shields.io/github/release/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/releases)
 [![GitHub Activity](https://img.shields.io/github/commit-activity/m/kramttocs/ha-gluetun.svg)](https://github.com/kramttocs/ha-gluetun/commits/main)
