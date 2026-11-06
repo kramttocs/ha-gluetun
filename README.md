@@ -33,6 +33,7 @@ https://github.com/madcowGit/gluetun_cc
 |------|------|
 | VPN Status | `/v1/vpn/status` |
 | Public IP | `/v1/publicip/ip` |
+| Forwarded Port | `/v1/portforward` |
 
 ### Device Information
 
@@ -65,7 +66,7 @@ Model: **openvpn**
 
 # Requirements
 
-A Gluetan instance with the **HTTP Control Server enabled**
+A Gluetun instance with the **HTTP Control Server enabled**
 
 Example control server address:
 

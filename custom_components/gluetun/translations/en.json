@@ -58,7 +58,8 @@
       "timezone": {"name": "Timezone"},
       "latitude": {"name": "Latitude"},
       "longitude": {"name": "Longitude"},
-      "last_ip_change": {"name": "Last IP Change"}
+      "last_ip_change": {"name": "Last IP Change"},
+      "forwarded_port": {"name": "Forwarded Port" }
     },
     "binary_sensor": {
       "vpn_connected": {"name": "VPN Connected"}

@@ -93,6 +93,10 @@ class GluetunApi:
         """Return the public IP payload."""
         return await self._get_json("/v1/publicip/ip")
         
+    async def async_get_forwarded_port(self) -> dict[str, Any]:
+        """Return the public Forwarded Port."""
+        return await self._get_json("/v1/portforward")
+
     async def async_get_vpn_settings(self) -> dict[str, Any]:
         """Return the VPN settings payload."""
         return await self._get_json("/v1/vpn/settings")

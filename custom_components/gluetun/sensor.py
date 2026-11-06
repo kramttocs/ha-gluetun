@@ -27,7 +27,7 @@ from .const import (
 from .coordinator import GluetunDataUpdateCoordinator
 
 GluetunConfigEntry = ConfigEntry[dict[str, Any]]
-GluetunValueFn = Callable[[GluetunDataUpdateCoordinator], str | float | datetime | None]
+GluetunValueFn = Callable[[GluetunDataUpdateCoordinator], str | float | int | datetime | None]
 GluetunAttrFn = Callable[[GluetunDataUpdateCoordinator], dict[str, Any] | None]
 
 
@@ -192,6 +192,12 @@ SENSOR_DESCRIPTIONS: Final[tuple[GluetunSensorEntityDescription, ...]] = (
         value_fn=_last_ip_change,
         extra_attributes_fn=_last_ip_change_attrs,
     ),
+    GluetunSensorEntityDescription(
+        key="forwarded_port",
+        translation_key="forwarded_port",
+        icon="mdi:ethernet",
+        value_fn=lambda coordinator: coordinator.forwarded_port,
+    ),
 )
 
 
@@ -228,7 +234,7 @@ class GluetunSensorEntity(CoordinatorEntity[GluetunDataUpdateCoordinator], Senso
         self._attr_unique_id = f"{entry.entry_id}_{description.key}"
 
     @property
-    def native_value(self) -> str | float | datetime | None:
+    def native_value(self) -> str | float | int | datetime | None:
         """Return the sensor state."""
         return self.entity_description.value_fn(self.coordinator)
 

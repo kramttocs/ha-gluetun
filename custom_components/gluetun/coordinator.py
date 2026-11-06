@@ -18,6 +18,7 @@ from .const import (
     COORDINATOR_PUBLIC_IP,
     COORDINATOR_SETTINGS,
     COORDINATOR_STATUS,
+    COORDINATOR_PORT,
     EVENT_IP_CHANGED,
     SCAN_INTERVAL_SECONDS,
     STATUS_SCAN_INTERVAL_SECONDS,
@@ -45,6 +46,7 @@ class GluetunDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any
         self._previous_public_ip: str | None = None
         self._latest_public_ip: str | None = None
         self._last_ip_change_at: datetime | None = None
+        self._last_port_data: dict[str, Any] = {}
 
     @property
     def vpn_status(self) -> str | None:
@@ -95,6 +97,14 @@ class GluetunDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any
         return self._last_ip_change_at
 
     @property
+    def forwarded_port(self) -> int | None:
+        """Return the forwarded port."""
+        if not self.data:
+            return None
+        value = self.data.get(COORDINATOR_PORT, {}).get("port")
+        return value if isinstance(value, int) else None
+
+    @property
     def latitude(self) -> float | None:
         """Return parsed latitude from the location payload."""
         return _parse_location_value(self.data.get(COORDINATOR_PUBLIC_IP, {}).get("location"), index=0) if self.data else None
@@ -133,9 +143,11 @@ class GluetunDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any
                 or self._refresh_count % self._refresh_every == 0
             )
             if should_refresh_slow_data:
+                port_data = await self.api.async_get_forwarded_port()
                 public_ip_data = await self.api.async_get_public_ip()
                 settings_data = await self.api.async_get_vpn_settings()
                 self._handle_public_ip_change(public_ip_data)
+                self._last_port_data = port_data
                 self._last_public_ip_data = public_ip_data
                 self._last_settings_data = settings_data
 
@@ -161,6 +173,7 @@ class GluetunDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any
 
         return {
             COORDINATOR_STATUS: status_data,
+            COORDINATOR_PORT: self._last_port_data,
             COORDINATOR_PUBLIC_IP: self._last_public_ip_data,
             COORDINATOR_SETTINGS: self._last_settings_data,
         }
